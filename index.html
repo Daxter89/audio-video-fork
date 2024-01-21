@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Demo Àudio i Vídeo</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
     <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
     <!-- Deixem l'etiqueta audio sense controls. Veieu que desapareix tot. -->
     <audio id="player">
@@ -19,43 +22,94 @@
         <div class="ocean">
             <div class="wave"></div>
             <div class="wave"></div>
-          </div>
+        </div>
     </div>
-    <!-- Afegim un botó de control per engegar la música. Utilitzem una font d'icones. -->
+    <!-- Afegim botons de control per engegar/aturar la música. Utilitzem una font d'icones. -->
     <div class="controlButtons">
-        <!-- Engeguem l'àudio en fer click. -->
-        <button type="button" onclick="engegarAudio();">
-            <span class="material-symbols-outlined">
-                play_arrow
-            </span>
+        <!-- Botó de reproducció SVG -->
+        <button type="button" onclick="toggleAudio();">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="5 3 19 12 5 21 5 3"></polygon>
+            </svg>
         </button>
+        <!-- Botó de parada SVG -->
+        <button type="button" onclick="stopAudio();">
+            <svg  width="24" height="24" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="4" y="4" width="16" height="16"></rect>
+            </svg>
+        </button>
+        <!-- SVG de altavoz -->
+        <button type="button" onclick="toggleMute();">
+            <svg id="speakerIcon"  width="18" height="18" viewBox="0 0 24 24"
+                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect>
+                <circle cx="12" cy="14" r="4"></circle>
+                <path d="M12 6H12"></path>
+            </svg>
+        </button>
+
+    </div>
+    <!-- Slider de control de volum -->
+    <div class="volumeSliderContainer">
+        <input type="range" id="volumeSlider" min="0" max="1" step="0.1" value="1" oninput="setVolume(this.value);">
     </div>
     <!-- Recordeu que heu de seguir les lleis en matèria de propietat intelectual.
          En aquest cas, cal nomenar i enllaçar l'autor i el tipus de llicència. 
     -->
     <div style="padding: 1em; margin-bottom: 1em; border: 1px; background-color: #eee;">
-        "<a rel="nofollow" href="https://timtaj.com/royalty-free-music/background-technology">Background Technology</a>" 
-        by <a rel="nofollow" href="https://freemusicarchive.org/music/timtaj/contact">Taj Tim</a> 
-        is licensed under <a rel="nofollow" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">Attribution-NonCommercial-NoDerivatives 4.0 International License</a>
+        "<a rel="nofollow" href="https://timtaj.com/royalty-free-music/background-technology">Background Technology</a>"
+        by <a rel="nofollow" href="https://freemusicarchive.org/music/timtaj/contact">Taj Tim</a>
+        is licensed under <a rel="nofollow"
+            href="https://creativecommons.org/licenses/by-nc-nd/4.0/">Attribution-NonCommercial-NoDerivatives 4.0
+            International License</a>
     </div>
     <div style="padding: 1em; margin-bottom: 1em; border: 1px; background-color: #eee;">
-        "Animació CSS de <a rel="nofollow" href="https://codepen.io/tedmcdo">Ted MacDonald</a>: 
+        "Animació CSS de <a rel="nofollow" href="https://codepen.io/tedmcdo">Ted MacDonald</a>:
         a CodePen <a rel="nofollow" href="https://codepen.io/tedmcdo/pen/PqxKXg">CSS & SVG Waves Animation</a>
     </div>
     <!-- Cal seleccionar l'element d'àudio. -->
     <script>
         let audio = document.getElementById('player');
+        let isPlaying = false;
+        let originalVolume = audio.volume; // Almacenar el volumen original
 
-        function engegarAudio() {
-            // engeguem audio
-            audio.play();
-            // engeguem animació
-            var waves = document.querySelectorAll('.wave');
-            for (var i = 0; i < waves.length; i++) {
-                waves[i].classList.add('playing');
+        function toggleAudio() {
+            if (isPlaying) {
+                audio.pause();
+            } else {
+                audio.play();
+                var waves = document.querySelectorAll('.wave');
+                for (var i = 0; i < waves.length; i++) {
+                    waves[i].classList.add('playing');
+                }
             }
+            isPlaying = !isPlaying;
         }
 
+        function stopAudio() {
+            audio.pause();
+            audio.currentTime = 0;
+            isPlaying = false;
+
+        }
+
+        function setVolume(volume) {
+            audio.volume = volume;
+        }
+
+        function toggleMute() {
+            if (audio.volume === 0) {
+                // Si el volumen es 0, restaurar el volumen a su valor original
+                audio.volume = originalVolume;
+            } else {
+                // Si el volumen no es 0, silenciar el audio
+                originalVolume = audio.volume; // Almacenar el volumen original
+                audio.volume = 0;
+            }
+        }
     </script>
 </body>
+
 </html>
